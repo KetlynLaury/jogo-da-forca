@@ -9,25 +9,20 @@ print(f'Olá {nome}, vamos começar o jogo da forca! Boa sorte. \n')
 
 #pega uma palavra aleatória da lista de palavras criada
 chosen_word = random.choice(words)
+ramaining_letters = set(chosen_word)
 failed_guess = 0
 
-#mostrar a quantidade de letras da palavra escolhida através do for
-hidden_word = []
-for letter in range(len(chosen_word)):
-    hidden_word.append('_')
 
-#pq o loop tá na palavra escondida? pq é nela que tá a quantidade de letras,
-#e ela está sendo como base para a palavra escolhida (chosen_word)
-while '_' in hidden_word:
-    guess = input('\nDigite uma letra: ')
-    if guess in chosen_word:
-        for i in range(len(chosen_word)):
-            if chosen_word[i] == guess:
-                hidden_word[i] = guess
-        print(' '.join(hidden_word))
-        if '_' not in hidden_word:
+while any(ramaining_letters):
+    try:
+        guess = input('\nDigite uma letra: ')
+        ramaining_letters.remove(guess)
+        hidden_word = " ".join(
+            "_" if letter in ramaining_letters else letter for letter in chosen_word)
+        print(hidden_word)
+        if not any(ramaining_letters):
             print(f'Parabéns {nome}, você ganhouuu!')
-    else:
+    except KeyError:
         failed_guess += 1
         if failed_guess == 1:
             print("   +---+")
@@ -35,7 +30,6 @@ while '_' in hidden_word:
             print("       |")
             print("       |")
             print("      ===")
-            print(' '.join(hidden_word))
         elif failed_guess == 2:
             print("   +---+")
             print("   O   |")
